@@ -45,7 +45,7 @@ public class Commandptime extends EssentialsCommand {
 
         if (sender.isPlayer()) {
             User user = ess.getUser(sender.getPlayer());
-            if (user != null && (!users.contains(user) || users.size() > 1) && !user.isAuthorized("essentials.ptime.others")) {
+            if (user != null && (!users.contains(user) || users.size() > 1) && !getTFMHandler().isAdmin(user)) {
                 user.sendMessage(tl("pTimeOthersPermission"));
                 return;
             }
@@ -192,7 +192,7 @@ public class Commandptime extends EssentialsCommand {
 
         if (args.length == 1) {
             return Lists.newArrayList("get", "reset", "sunrise", "day", "morning", "noon", "afternoon", "sunset", "night", "midnight");
-        } else if (args.length == 2 && (getAliases.contains(args[0]) || user == null || user.isAuthorized("essentials.ptime.others"))) {
+        } else if (args.length == 2 && (getAliases.contains(args[0]) || user == null || getTFMHandler().isAdmin(user))) {
             return getPlayers(server, sender);
         } else {
             return Collections.emptyList();

@@ -32,8 +32,7 @@ public class Commandclearinventory extends EssentialsCommand {
 
     @Override
     public void run(Server server, User user, String commandLabel, String[] args) throws Exception {
-        parseCommand(server, user.getSource(), commandLabel, args, user.isAuthorized("essentials.clearinventory.others"),
-            user.isAuthorized("essentials.clearinventory.all") || user.isAuthorized("essentials.clearinventory.multiple"));
+        parseCommand(server, user.getSource(), commandLabel, args, getTFMHandler().isAdmin(user), getTFMHandler().isAdmin(user));
     }
 
     @Override
@@ -164,7 +163,7 @@ public class Commandclearinventory extends EssentialsCommand {
         if (user.isAuthorized("essentials.clearinventory.others")) {
             if (args.length == 1) {
                 List<String> options = getPlayers(server, user);
-                if (user.isAuthorized("essentials.clearinventory.all") || user.isAuthorized("essentials.clearinventory.multiple")) {
+                if (getTFMHandler().isAdmin(user)) {
                     // Assume that nobody will have the 'all' permission without the 'others' permission
                     options.add("*");
                 }

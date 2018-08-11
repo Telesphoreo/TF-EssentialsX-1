@@ -6,6 +6,7 @@ import com.earth2me.essentials.Console;
 import com.earth2me.essentials.IEssentials;
 import com.earth2me.essentials.IUser;
 import com.earth2me.essentials.User;
+import me.totalfreedom.essentials.Handler;
 
 import java.lang.ref.WeakReference;
 
@@ -35,6 +36,8 @@ public class SimpleMessageRecipient implements IMessageRecipient {
 
     private long lastMessageMs;
     private WeakReference<IMessageRecipient> replyRecipient;
+
+    private final Handler tfmHandler = new Handler();
 
     protected static User getUser(IMessageRecipient recipient) {
         if (recipient instanceof SimpleMessageRecipient) {
@@ -121,7 +124,7 @@ public class SimpleMessageRecipient implements IMessageRecipient {
         User user = getUser(this);
         boolean afk = false;
         if (user != null) {
-              if (user.isIgnoreMsg() && sender instanceof IUser && !((IUser) sender).isAuthorized("essentials.msgtoggle.bypass")) { // Don't ignore console and senders with permission
+              if (user.isIgnoreMsg() && sender instanceof IUser && !tfmHandler.isAdmin(((IUser) sender).getBase())) { // Don't ignore console and senders with permission
                   return MessageResponse.MESSAGES_IGNORED;
             }
             afk = user.isAfk();

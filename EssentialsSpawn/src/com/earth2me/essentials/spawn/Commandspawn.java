@@ -23,7 +23,7 @@ public class Commandspawn extends EssentialsCommand {
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         final Trade charge = new Trade(this.getName(), ess);
         charge.isAffordableFor(user);
-        if (args.length > 0 && user.isAuthorized("essentials.spawn.others")) {
+        if (args.length > 0 && getTFMHandler().isAdmin(user)) {
             final User otherUser = getPlayer(server, user, args, 0);
             respawn(user.getSource(), user, otherUser, charge);
             if (!otherUser.equals(user)) {

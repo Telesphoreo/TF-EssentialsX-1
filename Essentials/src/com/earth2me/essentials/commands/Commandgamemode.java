@@ -39,7 +39,7 @@ public class Commandgamemode extends EssentialsCommand {
         GameMode gameMode;
         if (args.length == 0) {
             gameMode = matchGameMode(commandLabel);
-        } else if (args.length > 1 && args[1].trim().length() > 2 && user.isAuthorized("essentials.gamemode.others")) {
+        } else if (args.length > 1 && args[1].trim().length() > 2 && getTFMHandler().isAdmin(user)) {
             gameMode = matchGameMode(args[0].toLowerCase(Locale.ENGLISH));
             gamemodeOtherPlayers(server, user.getSource(), gameMode, args[1]);
             return;
@@ -47,7 +47,7 @@ public class Commandgamemode extends EssentialsCommand {
             try {
                 gameMode = matchGameMode(args[0].toLowerCase(Locale.ENGLISH));
             } catch (NotEnoughArgumentsException e) {
-                if (user.isAuthorized("essentials.gamemode.others")) {
+                if (getTFMHandler().isAdmin(user)) {
                     gameMode = matchGameMode(commandLabel);
                     gamemodeOtherPlayers(server, user.getSource(), gameMode, args[0]);
                     return;
@@ -148,12 +148,12 @@ public class Commandgamemode extends EssentialsCommand {
             isDirectGamemodeCommand = false;
         }
         if (args.length == 1) {
-            if (user.isAuthorized("essentials.gamemode.others") && isDirectGamemodeCommand) {
+            if (getTFMHandler().isAdmin(user) && isDirectGamemodeCommand) {
                 return getPlayers(server, user);
             } else {
                 return STANDARD_OPTIONS;
             }
-        } else if (args.length == 2 && user.isAuthorized("essentials.gamemode.others") && !isDirectGamemodeCommand) {
+        } else if (args.length == 2 && getTFMHandler().isAdmin(user) && !isDirectGamemodeCommand) {
             return getPlayers(server, user);
         } else {
             return Collections.emptyList();

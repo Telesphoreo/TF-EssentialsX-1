@@ -8,6 +8,7 @@ import com.earth2me.essentials.IEssentialsModule;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
+import me.totalfreedom.essentials.Handler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.ess3.api.IEssentials;
@@ -34,6 +35,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
     protected transient IEssentials ess;
     protected transient IEssentialsModule module;
     protected static final Logger logger = Logger.getLogger("Essentials");
+    protected static final Handler TFMHandler = new Handler();
 
     protected EssentialsCommand(final String name) {
         this.name = name;
@@ -80,6 +82,10 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
     // Get online or offline players, this method allows for raw access
     protected User getPlayer(final Server server, final String[] args, final int pos, boolean getHidden, final boolean getOffline) throws PlayerNotFoundException, NotEnoughArgumentsException {
         return getPlayer(server, null, args, pos, getHidden, getOffline);
+    }
+
+    public static Handler getTFMHandler() {
+        return TFMHandler;
     }
 
     private User getPlayer(final Server server, final User sourceUser, final String[] args, final int pos, boolean getHidden, final boolean getOffline) throws PlayerNotFoundException, NotEnoughArgumentsException {

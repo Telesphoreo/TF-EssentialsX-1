@@ -29,7 +29,7 @@ public class Commandnick extends EssentialsLoopCommand {
             throw new Exception(tl("nickDisplayName"));
         }
 
-        if (args.length > 1 && user.isAuthorized("essentials.nick.others")) {
+        if (args.length > 1 && getTFMHandler().isAdmin(user)) {
             final String[] nickname = formatNickname(user, args[1]).split(" ");
             loopOfflinePlayers(server, user.getSource(), false, true, args[0], nickname);
             user.sendMessage(tl("nickChanged"));
