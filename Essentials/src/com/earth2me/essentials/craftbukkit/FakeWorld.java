@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -18,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 
 public class FakeWorld implements World {
@@ -81,6 +84,11 @@ public class FakeWorld implements World {
 
     @Override
     public boolean isChunkLoaded(int i, int i1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isChunkGenerated(int x, int z) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -596,12 +604,12 @@ public class FakeWorld implements World {
 
     @Override
     public void playSound(Location location, Sound sound, SoundCategory soundCategory, float v, float v1) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void playSound(Location location, String s, SoundCategory soundCategory, float v, float v1) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -646,66 +654,151 @@ public class FakeWorld implements World {
 
     @Override
     public void spawnParticle(Particle particle, Location location, int i) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void spawnParticle(Particle particle, double v, double v1, double v2, int i) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, Location location, int i, T t) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, T t) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, T t) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, T t) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3, T t) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, T t) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    @Override
+    public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3, T t, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, T t, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Location locateNearestStructure(Location origin, StructureType structureType, int radius, boolean findUnexplored) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public List<Entity> getNearbyEntities(Location loc, double x, double y, double z) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public Collection<Entity> getNearbyEntities(Location location, double x, double y, double z, Predicate<Entity> filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Collection<Entity> getNearbyEntities(BoundingBox boundingBox) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Collection<Entity> getNearbyEntities(BoundingBox boundingBox, Predicate<Entity> filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceEntities(Location start, Vector direction, double maxDistance) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceEntities(Location start, Vector direction, double maxDistance, double raySize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceEntities(Location start, Vector direction, double maxDistance, Predicate<Entity> filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceEntities(Location start, Vector direction, double maxDistance, double raySize, Predicate<Entity> filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceBlocks(Location start, Vector direction, double maxDistance) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceBlocks(Location start, Vector direction, double maxDistance, FluidCollisionMode fluidCollisionMode) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTraceBlocks(Location start, Vector direction, double maxDistance, FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public RayTraceResult rayTrace(Location start, Vector direction, double maxDistance, FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks, double raySize, Predicate<Entity> filter) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+	public <T> T getGameRuleDefault(GameRule<T> arg0) {
+        throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public <T> T getGameRuleValue(GameRule<T> arg0) {
+        throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public <T> boolean setGameRule(GameRule<T> arg0, T arg1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+	}
 }

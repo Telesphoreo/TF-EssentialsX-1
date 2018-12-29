@@ -6,8 +6,8 @@ import com.earth2me.essentials.textreader.TextInput;
 import com.earth2me.essentials.textreader.TextPager;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.LocationUtil;
+import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.nms.refl.ReflUtil;
 
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
@@ -57,10 +57,10 @@ public class EssentialsPlayerListener implements Listener {
 
     public void registerEvents() {
         ess.getServer().getPluginManager().registerEvents(this, ess);
-        if (ReflUtil.getNmsVersionObject().isLowerThan(ReflUtil.V1_12_R1)) {
-            ess.getServer().getPluginManager().registerEvents(new PlayerListenerPre1_12(), ess);
-        } else {
+        if (isEntityPickupEvent()) {
             ess.getServer().getPluginManager().registerEvents(new PlayerListener1_12(), ess);
+        } else {
+            ess.getServer().getPluginManager().registerEvents(new PlayerListenerPre1_12(), ess);
         }
     }
 
@@ -138,10 +138,10 @@ public class EssentialsPlayerListener implements Listener {
             }
             return;
         }
-            final Location afk = user.getAfkPosition();
-            if (afk == null || !event.getTo().getWorld().equals(afk.getWorld()) || afk.distanceSquared(event.getTo()) > 9) {
-                user.updateActivityOnMove(true);
-            }
+        final Location afk = user.getAfkPosition();
+        if (afk == null || !event.getTo().getWorld().equals(afk.getWorld()) || afk.distanceSquared(event.getTo()) > 9) {
+            user.updateActivityOnMove(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -152,7 +152,7 @@ public class EssentialsPlayerListener implements Listener {
             event.setQuitMessage(null);
         } else if (ess.getSettings().isCustomQuitMessage() && event.getQuitMessage() != null) {
             final Player player = event.getPlayer();
-            event.setQuitMessage(ess.getSettings().getCustomQuitMessage().replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName()));
+            event.setQuitMessage(ess.getSettings().getCustomQuitMessage().replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName()).replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size())));
         }
 
         user.startTransaction();
@@ -258,7 +258,8 @@ public class EssentialsPlayerListener implements Listener {
                 } else if (ess.getSettings().isCustomJoinMessage()) {
                     String msg = ess.getSettings().getCustomJoinMessage()
                         .replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName())
-                        .replace("{UNIQUE}", NumberFormat.getInstance().format(ess.getUserMap().getUniqueUsers()));
+                        .replace("{UNIQUE}", NumberFormat.getInstance().format(ess.getUserMap().getUniqueUsers()))
+                        .replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size()));
                     ess.getServer().broadcastMessage(msg);
                 } else if (ess.getSettings().allowSilentJoinQuit()) {
                     ess.getServer().broadcastMessage(message);
@@ -463,8 +464,7 @@ public class EssentialsPlayerListener implements Listener {
                         if (spyer.isSocialSpyEnabled() && !player.equals(spyer.getBase())) {
                             if (user.isMuted() && ess.getSettings().getSocialSpyListenMutedPlayers()) {
                                 spyer.sendMessage(tl("socialSpyMutedPrefix") + player.getDisplayName() + ": " + event.getMessage());
-                            }
-                            else {
+                            } else {
                                 spyer.sendMessage(tl("socialSpyPrefix") + player.getDisplayName() + ": " + event.getMessage());
                             }
                         }
@@ -592,7 +592,7 @@ public class EssentialsPlayerListener implements Listener {
     public void onPlayerInteract(final PlayerInteractEvent event) {
         switch (event.getAction()) {
             case RIGHT_CLICK_BLOCK:
-                if (!event.isCancelled() && event.getClickedBlock().getType() == Material.LEGACY_BED && ess.getSettings().getUpdateBedAtDaytime()) {
+                if (!event.isCancelled() && MaterialUtil.isBed(event.getClickedBlock().getType()) && ess.getSettings().getUpdateBedAtDaytime()) {
                     User player = ess.getUser(event.getPlayer());
                     if (player.isAuthorized("essentials.sethome.bed")) {
                         player.getBase().setBedSpawnLocation(event.getClickedBlock().getLocation());
@@ -785,7 +785,16 @@ public class EssentialsPlayerListener implements Listener {
         final User user = ess.getUser(event.getPlayer());
             user.updateActivityOnInteract(true);
     }
-    
+
+    private static boolean isEntityPickupEvent() {
+        try {
+            Class.forName("org.bukkit.event.entity.EntityPickupItemEvent");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            return false;
+        }
+    }
+
     private final class PlayerListenerPre1_12 implements Listener {
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -797,7 +806,7 @@ public class EssentialsPlayerListener implements Listener {
             }
         }
     }
-    
+
     private final class PlayerListener1_12 implements Listener {
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

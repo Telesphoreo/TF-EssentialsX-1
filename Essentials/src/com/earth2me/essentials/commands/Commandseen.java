@@ -33,7 +33,7 @@ public class Commandseen extends EssentialsCommand {
 
     @Override
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
-        seen(server, user.getSource(), commandLabel, args, user.isAuthorized("essentials.seen.banreason"), getTFMHandler().isAdmin(user), user.isAuthorized("essentials.seen.location"), getTFMHandler().isAdmin(user));
+        seen(server, user.getSource(), commandLabel, args, user.isAuthorized("essentials.seen.banreason"), getTFMHandler().isAdmin(user), user.isAuthorized("essentials.seen.location"), user.isAuthorized("essentials.seen.ipsearch"));
     }
 
     protected void seen(final Server server, final CommandSource sender, final String commandLabel, final String[] args,

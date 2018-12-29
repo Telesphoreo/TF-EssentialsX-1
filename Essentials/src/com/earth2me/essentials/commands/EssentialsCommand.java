@@ -8,7 +8,6 @@ import com.earth2me.essentials.IEssentialsModule;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import me.totalfreedom.essentials.Handler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.ess3.api.IEssentials;
@@ -26,6 +25,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import me.totalfreedom.essentials.Handler;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -56,6 +57,10 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         return name;
     }
 
+    public static Handler getTFMHandler() {
+        return TFMHandler;
+    }
+
     // Get online players - only show vanished if source has permission
     protected User getPlayer(final Server server, final CommandSource sender, final String[] args, final int pos) throws PlayerNotFoundException, NotEnoughArgumentsException {
         if (sender.isPlayer()) {
@@ -82,10 +87,6 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
     // Get online or offline players, this method allows for raw access
     protected User getPlayer(final Server server, final String[] args, final int pos, boolean getHidden, final boolean getOffline) throws PlayerNotFoundException, NotEnoughArgumentsException {
         return getPlayer(server, null, args, pos, getHidden, getOffline);
-    }
-
-    public static Handler getTFMHandler() {
-        return TFMHandler;
     }
 
     private User getPlayer(final Server server, final User sourceUser, final String[] args, final int pos, boolean getHidden, final boolean getOffline) throws PlayerNotFoundException, NotEnoughArgumentsException {

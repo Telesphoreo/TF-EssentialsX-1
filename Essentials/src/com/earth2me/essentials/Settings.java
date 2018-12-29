@@ -17,8 +17,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -433,6 +431,9 @@ public class Settings implements net.ess3.api.ISettings {
             mFormat = "§r".concat(mFormat);
             chatFormats.put(group, mFormat);
         }
+        if (isDebug()) {
+            ess.getLogger().info(String.format("Found format '%s' for group '%s'", mFormat, group));
+        }
         return mFormat;
     }
 
@@ -535,6 +536,8 @@ public class Settings implements net.ess3.api.ISettings {
         unprotectedSigns = _getUnprotectedSign();
         defaultEnabledConfirmCommands = _getDefaultEnabledConfirmCommands();
         isCompassTowardsHomePerm = _isCompassTowardsHomePerm();
+        isAllowWorldInBroadcastworld = _isAllowWorldInBroadcastworld();
+        itemDbType = _getItemDbType();
     }
 
     private List<Material> itemSpawnBl = new ArrayList<Material>();
@@ -645,8 +648,15 @@ public class Settings implements net.ess3.api.ISettings {
 
     // #easteregg
     @Override
+    @Deprecated
     public boolean isTradeInStacks(int id) {
         return config.getBoolean("trade-in-stacks-" + id, false);
+    }
+
+    // #easteregg
+    @Override
+    public boolean isTradeInStacks(Material type) {
+        return config.getBoolean("trade-in-stacks." + type.toString().toLowerCase().replace("_", ""), false);
     }
 
     // #easteregg
@@ -1294,7 +1304,12 @@ public class Settings implements net.ess3.api.ISettings {
         if (isCommandCooldownsEnabled()) {
             for (Entry<Pattern, Long> entry : this.commandCooldowns.entrySet()) {
                 // Check if label matches current pattern (command-cooldown in config)
-                if (entry.getKey().matcher(label).matches()) {
+                boolean matches = entry.getKey().matcher(label).matches();
+                if (isDebug()) {
+                    ess.getLogger().info(String.format("Checking command '%s' against cooldown '%s': %s", label, entry.getKey(), matches));
+                }
+
+                if (matches) {
                     return entry;
                 }
             }
@@ -1336,24 +1351,8 @@ public class Settings implements net.ess3.api.ISettings {
         DecimalFormat currencyFormat = new DecimalFormat(currencyFormatString, decimalFormatSymbols);
         currencyFormat.setRoundingMode(RoundingMode.FLOOR);
 
-        // Updates NumberUtil#PRETTY_FORMAT field so that all of Essentials
-        // can follow a single format.
-        try {
-            Field field = NumberUtil.class.getDeclaredField("PRETTY_FORMAT");
-            field.setAccessible(true);
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-            field.set(null, currencyFormat);
-            modifiersField.setAccessible(false);
-            field.setAccessible(false);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            ess.getLogger().severe("Failed to apply custom currency format: " + e.getMessage());
-            if (isDebug()) {
-                e.printStackTrace();
-            }
-        }
-
+        // Updates NumberUtil#PRETTY_FORMAT field so that all of Essentials can follow a single format.
+        NumberUtil.internalSetPrettyFormat(currencyFormat);
         return currencyFormat;
     }
 
@@ -1451,5 +1450,27 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isCompassTowardsHomePerm() {
         return isCompassTowardsHomePerm;
+    }
+
+    private boolean isAllowWorldInBroadcastworld;
+
+    private boolean _isAllowWorldInBroadcastworld() {
+        return config.getBoolean("allow-world-in-broadcastworld", false);
+    }
+
+    @Override
+    public boolean isAllowWorldInBroadcastworld() {
+        return isAllowWorldInBroadcastworld;
+    }
+
+    private String itemDbType;
+
+    private String _getItemDbType() {
+        return config.getString("item-db-type", "auto");
+    }
+
+    @Override
+    public String getItemDbType() {
+        return itemDbType;
     }
 }

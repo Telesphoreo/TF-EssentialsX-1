@@ -68,7 +68,6 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
                 {
                     player = ess.getUser(sender.getPlayer());
                 }
-
                 togglePlayer(sender, player, null);
             }
         }

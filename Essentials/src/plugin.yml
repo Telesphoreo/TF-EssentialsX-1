@@ -24,7 +24,6 @@ commands:
   balancetop:
     description: Gets the top balance values.
     usage: /<command> <page>
-    aliases: [ebalancetop,baltop,ebaltop]
   book:
     description: Allows reopening and editing of sealed books.
     usage: /<command> [title|author [name]]
@@ -33,6 +32,10 @@ commands:
     description: Breaks the block you are looking at.
     usage: /<command>
     aliases: [ebreak]
+  broadcastworld:
+    description: Broadcasts a message to a world.
+    usage: /<command> <world> <msg>
+    aliases: [bcw,ebcw,bcastw,ebcastw,ebroadcastworld,shoutworld,eshoutworld]
   bigtree:
     description: Spawn a big tree where you are looking.
     usage: /<command> <tree|redwood|jungle>
@@ -184,10 +187,6 @@ commands:
     description: Throw an exploding kitten at your opponent.
     usage: /<command>
     aliases: [ekittycannon]
-  lightning:
-    description: The power of Thor. Strike at cursor or player.
-    usage: /<command> [player] [power]
-    aliases: [elightning,shock,eshock,smite,esmite,strike,estrike,thor,ethor]
   list:
     description: List all online players.
     usage: /<command> [group]

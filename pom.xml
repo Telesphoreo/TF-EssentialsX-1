@@ -35,20 +35,26 @@
 
     <modules>
         <module>Essentials</module>
+        <module>EssentialsAntiBuild</module>
+        <module>EssentialsChat</module>
+        <module>EssentialsGeoIP</module>
+        <module>EssentialsProtect</module>
         <module>EssentialsSpawn</module>
+        <module>EssentialsXMPP</module>
         <module>nms/NMSProvider</module>
         <module>nms/UpdatedMetaProvider</module>
         <module>nms/1_8_R1Provider</module>
         <module>nms/1_8_R2Provider</module>
         <module>nms/LegacyProvider</module>
         <module>nms/ReflectionProvider</module>
+        <module>nms/FlattenedProvider</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -67,7 +73,6 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,29 +82,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.sun</groupId>
-                        <artifactId>tools</artifactId>
-                        <version>1.5.0</version>
-                        <scope>system</scope>
-                        <systemPath>${java.home}/../lib/tools.jar</systemPath>
-                    </dependency>
-                </dependencies>
-                <inherited>false</inherited>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -166,6 +148,7 @@
                                         <include>messages*.properties</include>
                                         <include>config.yml</include>
                                         <include>items.csv</include>
+                                        <include>items.json</include>
                                     </includes>
                                     <excludes>
                                         <exclude>plugin.yml</exclude>
@@ -271,6 +254,7 @@
                     <include>*.yml</include>
                     <include>*.csv</include>
                     <include>*.txt</include>
+                    <include>*.json</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>

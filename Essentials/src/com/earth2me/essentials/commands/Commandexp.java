@@ -37,7 +37,7 @@ public class Commandexp extends EssentialsCommand {
                 setExp(user.getSource(), user, args[1], true);
             }
         } else if (args[0].equalsIgnoreCase("show")) {
-            if (args.length >= 2 && getTFMHandler().isAdmin(user)) {
+            if (args.length >= 2 && user.isAuthorized("essentials.exp.others")) {
                 String match = args[1].trim();
                 showMatch(server, user.getSource(), match);
             } else {
@@ -168,12 +168,12 @@ public class Commandexp extends EssentialsCommand {
                 } else {
                     return Collections.emptyList();
                 }
-            } else if (args[0].equalsIgnoreCase("show") && getTFMHandler().isAdmin(user)) {
+            } else if (args[0].equalsIgnoreCase("show") && user.isAuthorized("essentials.exp.others")) {
                 return getPlayers(server, user);
             } else {
                 return Collections.emptyList();
             }
-        } else if (args.length == 3 && (args[0].equalsIgnoreCase("set") && getTFMHandler().isAdmin(user)) || (args[0].equalsIgnoreCase("give") && getTFMHandler().isAdmin(user))) {
+        } else if (args.length == 3 && (args[0].equalsIgnoreCase("set") && user.isAuthorized("essentials.exp.set.others")) || (args[0].equalsIgnoreCase("give") && user.isAuthorized("essentials.exp.give.others"))) {
             return getPlayers(server, user);
         } else {
             return Collections.emptyList();

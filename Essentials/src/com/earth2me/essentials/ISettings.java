@@ -134,7 +134,10 @@ public interface ISettings extends IConf {
 
     boolean isEcoDisabled();
 
+    @Deprecated
     boolean isTradeInStacks(int id);
+
+    boolean isTradeInStacks(Material type);
 
     List<Material> itemSpawnBlacklist();
 
@@ -309,4 +312,8 @@ public interface ISettings extends IConf {
     boolean isConfirmCommandEnabledByDefault(String commandName);
 
     boolean isCompassTowardsHomePerm();
+
+    boolean isAllowWorldInBroadcastworld();
+
+    String getItemDbType();
 }

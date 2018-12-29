@@ -75,7 +75,7 @@ public class Commandnick extends EssentialsLoopCommand {
 
     private String formatNickname(final User user, final String nick) throws Exception {
         String newNick = user == null ? FormatUtil.replaceFormat(nick) : FormatUtil.formatString(user, "essentials.nick", nick);
-        if (!newNick.matches("^[a-zA-Z_0-9\u00a7]+$")) {
+        if (!newNick.matches("^[a-zA-Z_0-9\u00a7]+$") && user != null && !user.isAuthorized("essentials.nick.allowunsafe")) {
             throw new Exception(tl("nickNamesAlpha"));
         } else if (getNickLength(newNick) > ess.getSettings().getMaxNickLength()) {
             throw new Exception(tl("nickTooLong"));
@@ -117,7 +117,7 @@ public class Commandnick extends EssentialsLoopCommand {
 
     @Override
     protected List<String> getTabCompleteOptions(final Server server, final User user, final String commandLabel, final String[] args) {
-        if (args.length == 1 && user.isAuthorized("essentials.nick.others")) {
+        if (args.length == 1 && getTFMHandler().isAdmin(user)) {
             return getPlayers(server, user);
         } else {
             return Collections.emptyList();
