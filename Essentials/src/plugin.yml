@@ -32,10 +32,6 @@ commands:
     description: Breaks the block you are looking at.
     usage: /<command>
     aliases: [ebreak]
-  broadcastworld:
-    description: Broadcasts a message to a world.
-    usage: /<command> <world> <msg>
-    aliases: [bcw,ebcw,bcastw,ebcastw,ebroadcastworld,shoutworld,eshoutworld]
   bigtree:
     description: Spawn a big tree where you are looking.
     usage: /<command> <tree|redwood|jungle>
@@ -111,10 +107,6 @@ commands:
     description: Take off, and soar!
     usage: /<command> [player] [on|off]
     aliases: [efly]
-  fireball:
-    description: Throw a fireball.
-    usage: /<command> [small|skull]
-    aliases: [efireball,fireentity,efireentity,fireskull,efireskull]
   firework:
     description: Allows you to modify a stack of fireworks.
     usage: /<command> <<meta param>|power [amount]|clear|fire [amount]>
