@@ -788,6 +788,20 @@ public class OfflinePlayer implements Player {
     }
 
     @Override
+    public boolean sleep(Location location, boolean b) {
+        return false;
+    }
+
+    @Override
+    public void wakeup(boolean b) {
+    }
+
+    @Override
+    public Location getBedLocation() {
+        return getBedSpawnLocation();
+    }
+
+    @Override
     public void playEffect(EntityEffect ee) {
     }
 
