@@ -8,6 +8,7 @@ import com.earth2me.essentials.register.payment.Methods;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
+import com.earth2me.essentials.utils.VersionUtil;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.AfkStatusChangeEvent;
@@ -27,12 +28,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -224,7 +220,18 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     @Override
     public Boolean canSpawnItem(final Material material) {
-        return !ess.getSettings().itemSpawnBlacklist().contains(material);
+        if (ess.getSettings().permissionBasedItemSpawn()) {
+            final String name = material.toString().toLowerCase(Locale.ENGLISH).replace("_", "");
+
+            if (isAuthorized("essentials.itemspawn.item-all") || isAuthorized("essentials.itemspawn.item-" + name)) return true;
+
+            if (VersionUtil.getServerBukkitVersion().isLowerThan(VersionUtil.v1_13_0_R01)) {
+                final int id = material.getId();
+                if (isAuthorized("essentials.itemspawn.item-" + id)) return true;
+            }
+        }
+
+        return isAuthorized("essentials.itemspawn.exempt") || !ess.getSettings().itemSpawnBlacklist().contains(material);
     }
 
     @Override
@@ -360,7 +367,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     public String getDisplayName() {
-        return super.getBase().getDisplayName() == null ? super.getBase().getName() : super.getBase().getDisplayName();
+        return super.getBase().getDisplayName() == null || (ess.getSettings().hideDisplayNameInVanish() && isHidden()) ? super.getBase().getName() : super.getBase().getDisplayName();
     }
 
     @Override
@@ -872,7 +879,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
      * Returns the {@link ItemStack} in the main hand or off-hand. If the main hand is empty then the offhand item is returned - also nullable.
      */
     public ItemStack getItemInHand() {
-        if (ReflUtil.getNmsVersionObject().isLowerThan(ReflUtil.V1_9_R1)) {
+        if (VersionUtil.getServerBukkitVersion().isLowerThan(VersionUtil.v1_9_R01)) {
             return getBase().getInventory().getItemInHand();
         } else {
             PlayerInventory inventory = getBase().getInventory();

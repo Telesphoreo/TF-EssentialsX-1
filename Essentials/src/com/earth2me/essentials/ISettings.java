@@ -243,6 +243,8 @@ public interface ISettings extends IConf {
 
     boolean ignoreColorsInMaxLength();
 
+    boolean hideDisplayNameInVanish();
+
     int getMaxUserCacheCount();
 
     boolean allowSilentJoinQuit();
@@ -316,4 +318,8 @@ public interface ISettings extends IConf {
     boolean isAllowWorldInBroadcastworld();
 
     String getItemDbType();
+
+    boolean isForceEnableRecipe();
+
+    boolean allowOldIdSigns();
 }

@@ -7,6 +7,7 @@ import com.earth2me.essentials.textreader.TextPager;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
+import io.papermc.lib.PaperLib;
 import net.ess3.api.IEssentials;
 
 import org.bukkit.BanEntry;
@@ -14,6 +15,7 @@ import org.bukkit.BanList;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -152,7 +154,12 @@ public class EssentialsPlayerListener implements Listener {
             event.setQuitMessage(null);
         } else if (ess.getSettings().isCustomQuitMessage() && event.getQuitMessage() != null) {
             final Player player = event.getPlayer();
-            event.setQuitMessage(ess.getSettings().getCustomQuitMessage().replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName()).replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size())));
+            final String msg = ess.getSettings().getCustomQuitMessage()
+                    .replace("{PLAYER}", player.getDisplayName())
+                    .replace("{USERNAME}", player.getName())
+                    .replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size()));
+            
+            event.setQuitMessage(msg.isEmpty() ? null : msg);
         }
 
         user.startTransaction();
@@ -260,7 +267,9 @@ public class EssentialsPlayerListener implements Listener {
                         .replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName())
                         .replace("{UNIQUE}", NumberFormat.getInstance().format(ess.getUserMap().getUniqueUsers()))
                         .replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size()));
-                    ess.getServer().broadcastMessage(msg);
+                    if (!msg.isEmpty()) {
+                        ess.getServer().broadcastMessage(msg);
+                    }
                 } else if (ess.getSettings().allowSilentJoinQuit()) {
                     ess.getServer().broadcastMessage(message);
                 }
@@ -594,7 +603,7 @@ public class EssentialsPlayerListener implements Listener {
             case RIGHT_CLICK_BLOCK:
                 if (!event.isCancelled() && MaterialUtil.isBed(event.getClickedBlock().getType()) && ess.getSettings().getUpdateBedAtDaytime()) {
                     User player = ess.getUser(event.getPlayer());
-                    if (player.isAuthorized("essentials.sethome.bed")) {
+                    if (player.isAuthorized("essentials.sethome.bed") && player.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
                         player.getBase().setBedSpawnLocation(event.getClickedBlock().getLocation());
                         player.sendMessage(tl("bedSet", player.getLocation().getWorld().getName(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ()));
                     }
@@ -634,7 +643,7 @@ public class EssentialsPlayerListener implements Listener {
                     while (LocationUtil.isBlockDamaging(loc.getWorld(), loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ())) {
                         loc.setY(loc.getY() + 1d);
                     }
-                    user.getBase().teleport(loc, TeleportCause.PLUGIN);
+                    PaperLib.teleportAsync(user.getBase(), loc, TeleportCause.PLUGIN);
                 }
             }
             ess.scheduleSyncDelayedTask(new DelayedClickJumpTask());
@@ -720,6 +729,7 @@ public class EssentialsPlayerListener implements Listener {
         } else if (clickedInventory != null && clickedInventory.getType() == InventoryType.PLAYER) {
             if (ess.getSettings().isDirectHatAllowed() && event.getClick() == ClickType.LEFT && event.getSlot() == 39
                 && event.getCursor().getType() != Material.AIR && event.getCursor().getType().getMaxDurability() == 0
+                && !MaterialUtil.isSkull(event.getCursor().getType())
                 && ess.getUser(event.getWhoClicked()).isAuthorized("essentials.hat")) {
                 event.setCancelled(true);
                 final PlayerInventory inv = (PlayerInventory) clickedInventory;

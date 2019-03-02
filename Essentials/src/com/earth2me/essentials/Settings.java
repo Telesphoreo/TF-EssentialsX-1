@@ -1,10 +1,12 @@
 package com.earth2me.essentials;
 
+import com.earth2me.essentials.api.IItemDb;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.signs.EssentialsSign;
 import com.earth2me.essentials.signs.Signs;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.SimpleTextInput;
+import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 
@@ -36,7 +38,6 @@ public class Settings implements net.ess3.api.ISettings {
     private final transient EssentialsConf config;
     private static final Logger logger = Logger.getLogger("Essentials");
     private final transient IEssentials ess;
-    private boolean metricsEnabled = true;
 
     public Settings(IEssentials ess) {
         this.ess = ess;
@@ -538,9 +539,15 @@ public class Settings implements net.ess3.api.ISettings {
         isCompassTowardsHomePerm = _isCompassTowardsHomePerm();
         isAllowWorldInBroadcastworld = _isAllowWorldInBroadcastworld();
         itemDbType = _getItemDbType();
+        forceEnableRecipe = _isForceEnableRecipe();
+        allowOldIdSigns = _allowOldIdSigns();
     }
 
-    private List<Material> itemSpawnBl = new ArrayList<Material>();
+    void _lateLoadItemSpawnBlacklist() {
+        itemSpawnBl = _getItemSpawnBlacklist();
+    }
+
+    private List<Material> itemSpawnBl = new ArrayList<>();
 
     @Override
     public List<Material> itemSpawnBlacklist() {
@@ -549,8 +556,9 @@ public class Settings implements net.ess3.api.ISettings {
 
     private List<Material> _getItemSpawnBlacklist() {
         final List<Material> epItemSpwn = new ArrayList<>();
-        if (ess.getItemDb() == null) {
-            logger.log(Level.FINE, "Aborting ItemSpawnBL read, itemDB not yet loaded.");
+        final IItemDb itemDb = ess.getItemDb();
+        if (itemDb == null || !itemDb.isReady()) {
+            logger.log(Level.FINE, "Skipping item spawn blacklist read; item DB not yet loaded.");
             return epItemSpwn;
         }
         for (String itemName : config.getString("item-spawn-blacklist", "").split(",")) {
@@ -559,10 +567,10 @@ public class Settings implements net.ess3.api.ISettings {
                 continue;
             }
             try {
-                final ItemStack iStack = ess.getItemDb().get(itemName);
+                final ItemStack iStack = itemDb.get(itemName);
                 epItemSpwn.add(iStack.getType());
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, tl("unknownItemInList", itemName, "item-spawn-blacklist"));
+                logger.log(Level.SEVERE, tl("unknownItemInList", itemName, "item-spawn-blacklist"), ex);
             }
         }
         return epItemSpwn;
@@ -684,12 +692,20 @@ public class Settings implements net.ess3.api.ISettings {
             if (itemName.isEmpty()) {
                 continue;
             }
-            ItemStack itemStack;
-            try {
-                itemStack = ess.getItemDb().get(itemName);
-                list.add(itemStack.getType());
-            } catch (Exception ex) {
+
+            Material mat = EnumUtil.getMaterial(itemName.toUpperCase());
+            
+            if (mat == null) {
+                try {
+                    ItemStack itemStack = ess.getItemDb().get(itemName);
+                    mat = itemStack.getType();
+                } catch (Exception ignored) {}
+            }
+
+            if (mat == null) {
                 logger.log(Level.SEVERE, tl("unknownItemInList", itemName, configName));
+            } else {
+                list.add(mat);
             }
         }
         return list;
@@ -1103,6 +1119,11 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("ignore-colors-in-max-nick-length", false);
     }
 
+    @Override
+    public boolean hideDisplayNameInVanish() {
+        return config.getBoolean("hide-displayname-in-vanish", false);
+    }
+
     private boolean allowSilentJoin;
 
     public boolean _allowSilentJoinQuit() {
@@ -1463,7 +1484,7 @@ public class Settings implements net.ess3.api.ISettings {
         return isAllowWorldInBroadcastworld;
     }
 
-    private String itemDbType;
+    private String itemDbType; // #EasterEgg - admins can manually switch items provider if they want
 
     private String _getItemDbType() {
         return config.getString("item-db-type", "auto");
@@ -1472,5 +1493,27 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public String getItemDbType() {
         return itemDbType;
+    }
+
+    private boolean forceEnableRecipe; // https://github.com/EssentialsX/Essentials/issues/1397
+
+    private boolean _isForceEnableRecipe() {
+        return config.getBoolean("force-enable-recipe", false);
+    }
+
+    @Override
+    public boolean isForceEnableRecipe() {
+        return forceEnableRecipe;
+    }
+
+    private boolean allowOldIdSigns;
+
+    private boolean _allowOldIdSigns() {
+        return config.getBoolean("allow-old-id-signs", false);
+    }
+
+    @Override
+    public boolean allowOldIdSigns() {
+        return allowOldIdSigns;
     }
 }

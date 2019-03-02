@@ -788,17 +788,18 @@ public class OfflinePlayer implements Player {
     }
 
     @Override
-    public boolean sleep(Location location, boolean b) {
+    public boolean sleep(Location location, boolean force) {
         return false;
     }
 
     @Override
-    public void wakeup(boolean b) {
+    public void wakeup(boolean setSpawnLocation) {
+
     }
 
     @Override
     public Location getBedLocation() {
-        return getBedSpawnLocation();
+        return null;
     }
 
     @Override

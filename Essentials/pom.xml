@@ -6,17 +6,10 @@
     <parent>
         <groupId>net.ess3</groupId>
         <artifactId>EssentialsXParent</artifactId>
-        <version>2.15.0</version>
+        <version>2.16.1</version>
     </parent>
 
     <artifactId>EssentialsX</artifactId>
-
-    <licenses>
-        <license>
-            <name>GPLv3</name>
-            <url>http://www.gnu.org/copyleft/gpl.html</url>
-        </license>
-    </licenses>
 
     <build>
         <finalName>EssentialsX-${full.version}</finalName>
@@ -24,7 +17,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <showDeprecation>false</showDeprecation>
                 </configuration>
@@ -32,7 +25,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -41,6 +34,15 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.papermc.lib</pattern>
+                            <shadedPattern>com.earth2me.essentials.paperlib</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -48,26 +50,32 @@
     <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
-            <version>1.5.6</version>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>NMSProvider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>UpdatedMetaProvider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>1_8_R1Provider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -79,7 +87,7 @@
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>1_8_R2Provider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -91,41 +99,20 @@
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>LegacyProvider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>ReflectionProvider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>FlattenedProvider</artifactId>
-            <version>2.15.0</version>
+            <version>2.16.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>me.rayzr522</groupId>
-            <artifactId>jsonmessage</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-        <repository>
-            <id>rayzr-repo</id>
-            <url>https://cdn.rawgit.com/Rayzr522/maven-repo/master/</url>
-        </repository>
-    </repositories>
 </project>
